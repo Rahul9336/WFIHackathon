@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="hackathonfront">
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/webapp"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/webapp/WEB-INF/lang"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/webapp/resources"/>
+        <dependent-module archiveName="hackathon-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hackathon/hackathon">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="hackathonfront"/>
+        <property name="java-output-path" value="/hackathonfront/target/classes"/>
+    </wb-module>
+</project-modules>
