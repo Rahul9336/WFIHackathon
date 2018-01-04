@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import WFI.MAIT.hackathon.dao.BookStorageDao;
+import WFI.MAIT.hackathon.dao.CartItemdao;
 import WFI.MAIT.hackathon.dao.Cartdao;
 import WFI.MAIT.hackathon.dao.CropCalendarDao;
 import WFI.MAIT.hackathon.dao.CropDetailDao;
@@ -33,6 +35,7 @@ import WFI.MAIT.hackathon.dao.RolesDao;
 import WFI.MAIT.hackathon.dao.StorageDao;
 import WFI.MAIT.hackathon.dto.BookedStorage;
 import WFI.MAIT.hackathon.dto.Cart;
+import WFI.MAIT.hackathon.dto.CartItem;
 import WFI.MAIT.hackathon.dto.CropCalendar;
 import WFI.MAIT.hackathon.dto.Crop_Detail;
 import WFI.MAIT.hackathon.dto.Crops;
@@ -63,6 +66,7 @@ public class FarmerController {
 	E_mandi emandi;
 	Farmer farmer;
 	Storage storage;
+	Long ip;
 	Crops crops;
 	Notification notify;
 	CropCalendar cropCalendar;
@@ -78,9 +82,12 @@ public class FarmerController {
 	BookStorageDao bookedStorageDao;
 	static Integer count = 0;
 	static Integer item = 0;
+	static Double price=0.0;
 	@Autowired
 	Cartdao cartDao;
 	Cart cart;
+	@Autowired
+	CartItemdao cartItemDao;
 	@RequestMapping(value = "/signup", method = RequestMethod.GET)
 	public ModelAndView Signup() {
 		ModelAndView model = new ModelAndView("SignUp");
@@ -88,8 +95,21 @@ public class FarmerController {
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public ModelAndView Login() {
+	public ModelAndView Login(HttpServletRequest request,Map<String,Object>list) {
 		ModelAndView model = new ModelAndView("farmer/login");
+		String address=request.getRemoteAddr();
+		ip=extractint(address);
+		Cart cartid=cartDao.getCartBycart_Id(ip);
+		List<CartItem> cartItems=cartItemDao.cartItemGetByCart(cartid);
+		for(CartItem cartitem:cartItems) {
+			count+=cartitem.getSell_quantity();
+			price+=cartitem.getTotal_price();
+		}
+		list.put("cart", count);
+		list.put("grand", price);
+		list.put("detail", cartItems);
+		count=0;
+		price=0.0;
 		return model;
 	}
 
@@ -601,6 +621,19 @@ public class FarmerController {
 		map.put("emandi", emandiDao.searchByDistrict(district));
 		count=0;
 		return model;
-	}	
+	}
+	public static long extractint(String str) {
+	    String x = str;
+	    String numStr = "";
+
+	    for (int i = 0; i < x.length(); i++) {
+	        char charCheck = x.charAt(i);
+	        if(Character.isDigit(charCheck)) {
+	            numStr += charCheck;
+	        }
+	    }
+	    Long num = Long.parseLong(numStr);
+	    return num;
+}
 	
 }
